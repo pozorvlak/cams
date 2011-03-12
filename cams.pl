@@ -64,6 +64,7 @@ sub merge {
         }
     }
     @answer = sort { $cost_fn->($a) <=> $cost_fn->($b) } @answer;
+    # Comment out next line for EPIC SLOWDOWN :-)
     @answer = strip_supersets(@answer);
     return @answer;
 }
