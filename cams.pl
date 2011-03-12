@@ -39,6 +39,20 @@ sub covering {
     return map { set($_) } @suitable;
 }
 
+# Return a list of minimal elements of @_; ie x is in the returned list
+# iff there is no y in @_ with y < @_.
+# Assumes list is sorted.
+sub strip_supersets {
+    my @seen;
+    SET: foreach my $set (@_) {
+        foreach my $seen (@seen) {
+            next SET if $seen < $set;
+        }
+        push @seen, $set;
+    }
+    return @seen;
+}
+
 # Given a list of coverings for L and a list of coverings for R, return a list
 # of coverings for L+R, sorted by cost (lowest first).
 sub merge {
@@ -50,6 +64,7 @@ sub merge {
         }
     }
     @answer = sort { $cost_fn->($a) <=> $cost_fn->($b) } @answer;
+    @answer = strip_supersets(@answer);
     return @answer;
 }
 
