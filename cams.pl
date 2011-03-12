@@ -8,7 +8,6 @@ use 5.010;
 use Set::Object qw/set/;
 use List::Util qw/sum/;
 use POSIX qw/floor/;
-use Data::Dumper;
 
 # Made up data
 my @cams = (
@@ -35,7 +34,6 @@ sub weight_of_set {
 sub covering {
     my $width = shift;
     my @suitable = grep { $_->{min} <= $width && $_->{max} >= $width } @cams;
-    my @names = map({ $_->{name} } @suitable);
     return map { set($_) } @suitable;
 }
 
