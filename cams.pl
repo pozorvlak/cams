@@ -8,9 +8,7 @@ use 5.010;
 use Set::Object qw/set/;
 use List::Util qw/sum/;
 use POSIX qw/floor/;
-
-my $min = 15;
-my $max = 20;
+use Data::Dumper;
 
 # Made up data
 my @cams = (
@@ -37,13 +35,13 @@ sub weight_of_set {
 sub covering {
     my $width = shift;
     my @suitable = grep { $_->{min} <= $width && $_->{max} >= $width } @cams;
+    my @names = map({ $_->{name} } @suitable);
     return map { set($_) } @suitable;
 }
 
 # Given a list of coverings for L and a list of coverings for R, return a list
 # of coverings for L+R, sorted by cost (lowest first).
 sub merge {
-    say @_;
     (my $left, my $right, my $cost_fn) = @_;
     my @answer = ();
     for my $left_set (@$left) {
@@ -51,22 +49,21 @@ sub merge {
             push @answer, $left_set + $right_set;
         }
     }
-    return [ sort { $cost_fn->($a) <=> $cost_fn->($b) } @answer ];
+    @answer = sort { $cost_fn->($a) <=> $cost_fn->($b) } @answer;
+    return @answer;
 }
 
 sub candidates {
     (my $min, my $max, my $cost_fn) = @_;
     if (($max - $min) == 0) {
-        return [];
+        return ();
     } elsif (($max - $min ) == 1) {
-        return [covering($min)];
+        return covering($min);
     } else {
         my $middle = floor(($max + $min)/2);
-        my $left = candidates($min, $middle, $cost_fn);
-        my $right = candidates($middle, $max, $cost_fn);
-        print("$min-$max: ");
+        my $left = [ candidates($min, $middle, $cost_fn) ];
+        my $right = [ candidates($middle, $max, $cost_fn) ];
         my @candidates = merge($left, $right, $cost_fn);
-#        say scalar(@candidates) . " candidates.";
         return @candidates;
     }
 }
@@ -76,10 +73,10 @@ sub say_covering {
     my $cost_fn = shift;
     print join(", ", map { $_->{'name'} } $covering->members());
     print ": " . $cost_fn->($covering) if defined($cost_fn);
-    say;
+    say "";
 }
 
-for my $covering (candidates($min, $max, \&weight_of_set)) {
+for my $covering (candidates($ARGV[0], $ARGV[1], \&weight_of_set)) {
     say_covering($covering, \&weight_of_set);
 }
 
