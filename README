@@ -1,0 +1,44 @@
+In rock climbing, it's common to protect climbs with spring-loaded camming
+devices (or just "cams" for short). You insert a cam into a handy crack in the
+rock, clip your rope to it and then climb past; if you fall, then the downward
+force on the cam will cause it to bite harder into the rock and arrest your
+fall. Modern cams can literally hold the weight of a car:
+
+http://www.dmmclimbing.com/video.asp?id=2
+
+Cams revolutionised rock climbing when they were invented in the 70s: suddenly,
+loads of routes were merely scary instead of unprotectable death routes. But
+there are two problems with cams: they're expensive and heavy. Well, make that
+three problems: each cam can only grip cracks whose width is within a given
+range, so your "rack" needs to contain cams of the correct sizes for your
+route. Here's an investigation of current cams on the market, and a calculation
+of their weight-efficiency.
+
+http://www.summitpost.org/size-matters-a-gear-comparison/694359
+
+But, I thought, this sounds like a linear programming problem. We just need to
+ask a user what range of cracks they're likely to want to protect (to a first
+approximation, this is a feature of the crag and rock type you're climbing on),
+and then we can use MATHS!!!!11!!7!! to calculate the minimum-weight set of
+cams that covers that range. Treat each 1mm range as a binary coefficient (we
+need to protect 203-204mm cracks/we don't need to), treat each type of cam as a
+variable, have "sum of weights" as our objective function, and throw
+Algorithm::Simplex at it. Even better, we could use "sum of costs" as our
+objective function to get the cheapest possible rack, or a linear combination
+of the two (obtained by asking the user "how much would you pay to shave 10g
+off your rack?") and get a personalised "best rack for you" calculation.
+
+Then I realised that Algorithm::Simplex would probably tell me to buy 2/7 of a
+Black Diamond #4 and 1/3 of a DMM #3, and that this would be precisely no use
+to me. So I googled for "integer programming", and discovered that this was
+NP-hard :-(
+
+But did this dishearten me? No, of course not! Currently (thanks to Murray
+Walker) I'm trying a dynamic programming/divide-and-conquer approach. Other
+possibilities include:
+
+ * Genetic algorithms
+ * Metropolis-Hastings/simulated annealing
+ * Brute-force search with aggressive pruning of the search tree
+ * Shell out to external integer-programming tools
+ * Write my own branch-and-cut implementation.
