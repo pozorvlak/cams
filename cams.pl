@@ -7,6 +7,7 @@ use strict;
 use 5.010;
 use Set::Object qw/set/;
 use List::Util qw/sum/;
+use Scalar::Util qw/looks_like_number/;
 use POSIX qw/floor/;
 
 # Made up data
@@ -89,6 +90,9 @@ sub say_covering {
     print ": " . $cost_fn->($covering) if defined($cost_fn);
     say "";
 }
+
+die "Usage: cams.pl MIN MAX\n"
+    if @ARGV != 2 || grep { !looks_like_number($_) } @ARGV;
 
 for my $covering (candidates($ARGV[0], $ARGV[1], \&weight_of_set)) {
     say_covering($covering, \&weight_of_set);
