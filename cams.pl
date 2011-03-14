@@ -35,7 +35,7 @@ sub weight_of_set {
 sub covering {
     my $width = shift;
     my @suitable = grep { $_->{min} <= $width && $_->{max} >= $width } @cams;
-    return map { set($_) } @suitable;
+    return [map { set($_) } @suitable];
 }
 
 # Return a list of minimal elements of @_; ie x is in the returned list
@@ -55,7 +55,7 @@ sub strip_supersets {
 # Given a list of coverings for L and a list of coverings for R, return a list
 # of coverings for L+R, sorted by cost (lowest first).
 sub merge {
-    (my $left, my $right, my $cost_fn) = @_;
+    (my $cost_fn, my $left, my $right) = @_;
     my @answer = ();
     for my $left_set (@$left) {
         for my $right_set (@$right) {
@@ -70,16 +70,14 @@ sub merge {
 
 sub candidates {
     (my $min, my $max, my $cost_fn) = @_;
-    if (($max - $min) == 0) {
-        return ();
-    } elsif (($max - $min ) == 1) {
-        return covering($min);
-    } else {
+    if ($max - $min <= 1) {
+        return merge($cost_fn, covering($min), covering($max));
+    }
+    else {
         my $middle = floor(($max + $min)/2);
-        my $left = [ candidates($min, $middle, $cost_fn) ];
-        my $right = [ candidates($middle, $max, $cost_fn) ];
-        my @candidates = merge($left, $right, $cost_fn);
-        return @candidates;
+        return merge($cost_fn,
+                     [ candidates($min, $middle, $cost_fn) ],
+                     [ candidates($middle, $max, $cost_fn) ]);
     }
 }
 
