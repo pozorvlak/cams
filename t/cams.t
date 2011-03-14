@@ -4,17 +4,24 @@ use v5.10;
 use strict;
 use warnings;
 
-use Test::More 0.88;
 use Path::Class qw<file>;
+use lib file(__FILE__)->dir->parent->subdir('lib')->stringify;
 
-my $SCRIPT = file(__FILE__)->dir->parent->file('cams.pl');
+use Test::More 0.88;
+use Test::Fatal;
+use Cams::Solver;
+use Cams::Data qw<test_data>;
+
+my $data = test_data();
+
 my %NAME = (
     wd => 'WD Friend',
     bc => 'BC Camalot',
 );
 
-cams_ok('', '', undef);
-cams_ok(20, 10, undef);
+like(exception { Cams::Solver->new($data, 20, 10, 'weight') },
+     qr/Impossible to solve/, "Can't solve where min > max");
+
 cams_ok(1000, 2000);
 cams_ok(25, 52, '32 bc3 wd7', '33 wd6 wd7', '52 bc3 bc4 bc5', '53 bc4 bc5 wd6');
 cams_ok(25, 53, '52 bc3 bc4 bc5', '53 bc4 bc5 wd6', '55 bc3 bc5 wd7',
@@ -25,39 +32,21 @@ done_testing();
 sub cams_ok {
     my ($min, $max, @results) = @_;
 
-    if (@results == 1 && !defined $results[0]) {
-        my $got = qx[$^X $SCRIPT $min $max 2> /dev/null];
-        isnt($?, 0, "`cams.pl $min $max` exits unsuccessfully");
-        is($got, '', "... and with no output");
-    }
-    elsif (!@results) {
-        my $got = qx[$^X $SCRIPT $min $max];
-        is($?, 0, "`cams.pl $min $max` exits successfully");
-        is($got, "No solutions are possible\n", "... and with no solutions");
-    }
-    else {
-        my @expected;
-        for my $result (@results) {
-            my ($total, @cams) = split ' ', $result;
-            for (@cams) {
-                s/\A ([a-z]+) (?= [0-9]+ \z)/$NAME{$1} /xmsg
-                    or die "TEST BUG: unknown cam $_\n";
-            }
-            push @expected, [$total, sort @cams];
+    my @expected;
+    for my $result (@results) {
+        my ($total, @cams) = split ' ', $result;
+        for (@cams) {
+            s/\A ([a-z]+) (?= [0-9]+ \z)/$NAME{$1} /xmsg
+                or die "TEST BUG: unknown cam $_\n";
         }
-
-        my $got = qx[$^X $SCRIPT $min $max];
-        is($?, 0, "`cams.pl $min $max` exits successfully");
-        is_deeply(parse_output($got), \@expected, '... with correct output');
+        push @expected, [$total, sort @cams];
     }
-}
 
-sub parse_output {
-    my ($got) = @_;
-    my @sets;
-    for (split /\n/, $got) {
-        my ($cams, $cost) = split /: /;
-        push @sets, [$cost, sort split /, /, $cams];
+    my @got;
+    my $solver = Cams::Solver->new($data, $min, $max, 'weight');
+    for my $solution ($solver->solutions) {
+        push @got, [$solution->weight, sort map { $_->{name} } @$solution];
     }
-    return \@sets;
+
+    is_deeply(\@got, \@expected, "Correct results for min=$min max=$max");
 }
