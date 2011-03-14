@@ -93,8 +93,14 @@ die "Usage: cams.pl MIN MAX\n"
     if @ARGV != 2 || $ARGV[0] > $ARGV[1]
     || grep { !looks_like_number($_) } @ARGV;
 
-for my $covering (candidates($ARGV[0], $ARGV[1], \&weight_of_set)) {
-    say_covering($covering, \&weight_of_set);
+my @solutions = candidates($ARGV[0], $ARGV[1], \&weight_of_set);
+if (!@solutions) {
+    say 'No solutions are possible';
+}
+else {
+    for my $covering (@solutions) {
+        say_covering($covering, \&weight_of_set);
+    }
 }
 
 1;

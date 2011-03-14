@@ -15,6 +15,7 @@ my %NAME = (
 
 cams_ok('', '', undef);
 cams_ok(20, 10, undef);
+cams_ok(1000, 2000);
 cams_ok(25, 52, '32 bc3 wd7', '33 wd6 wd7', '52 bc3 bc4 bc5', '53 bc4 bc5 wd6');
 cams_ok(25, 53, '52 bc3 bc4 bc5', '53 bc4 bc5 wd6', '55 bc3 bc5 wd7',
         '56 bc5 wd6 wd7', '69 bc3 wd7 wd8', '70 wd6 wd7 wd8');
@@ -28,6 +29,11 @@ sub cams_ok {
         my $got = qx[$^X $SCRIPT $min $max 2> /dev/null];
         isnt($?, 0, "`cams.pl $min $max` exits unsuccessfully");
         is($got, '', "... and with no output");
+    }
+    elsif (!@results) {
+        my $got = qx[$^X $SCRIPT $min $max];
+        is($?, 0, "`cams.pl $min $max` exits successfully");
+        is($got, "No solutions are possible\n", "... and with no solutions");
     }
     else {
         my @expected;
