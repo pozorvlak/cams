@@ -92,7 +92,8 @@ sub say_covering {
 }
 
 die "Usage: cams.pl MIN MAX\n"
-    if @ARGV != 2 || grep { !looks_like_number($_) } @ARGV;
+    if @ARGV != 2 || $ARGV[0] > $ARGV[1]
+    || grep { !looks_like_number($_) } @ARGV;
 
 for my $covering (candidates($ARGV[0], $ARGV[1], \&weight_of_set)) {
     say_covering($covering, \&weight_of_set);

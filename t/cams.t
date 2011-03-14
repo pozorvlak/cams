@@ -14,6 +14,7 @@ my %NAME = (
 );
 
 cams_ok('', '', undef);
+cams_ok(20, 10, undef);
 cams_ok(25, 52, '32 bc3 wd7', '33 wd6 wd7', '52 bc3 bc4 bc5', '53 bc4 bc5 wd6');
 
 done_testing();
