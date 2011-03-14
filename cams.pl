@@ -1,106 +1,27 @@
 #!/usr/bin/perl
 
-package Cams;
-
 use warnings;
 use strict;
 use 5.010;
-use Set::Object qw/set/;
-use List::Util qw/sum/;
+use Path::Class qw/file/;
+use lib file(__FILE__)->dir->subdir('lib')->absolute->stringify;
+
+use Cams::Solver;
+use Cams::Data qw/test_data/;
 use Scalar::Util qw/looks_like_number/;
-use POSIX qw/floor/;
-
-# Made up data
-my @cams = (
-# Wild Diamond, a Johannesburg firm
-    { name => "WD Friend 4", min => 5, max => 17, weight => 7 },
-    { name => "WD Friend 5", min => 15, max => 25, weight => 9 },
-    { name => "WD Friend 6", min => 23, max => 37, weight => 13 },
-    { name => "WD Friend 7", min => 35, max => 52, weight => 20 },
-    { name => "WD Friend 8", min => 50, max => 70, weight => 37 },
-# Black Country, the well-known Lancashire cam manufacturer
-    { name => "BC Camalot 1", min => 10, max => 19, weight => 8 },
-    { name => "BC Camalot 2", min => 17, max => 27, weight => 10 },
-    { name => "BC Camalot 3", min => 25, max => 36, weight => 12 },
-    { name => "BC Camalot 4", min => 33, max => 44, weight => 17 },
-    { name => "BC Camalot 5", min => 42, max => 55, weight => 23 },
-    { name => "BC Camalot 6", min => 54, max => 70, weight => 34 },
-);
-
-sub weight_of_set {
-    my $covering = shift;
-    return sum(map { $_->{'weight'} } $covering->members());
-}
-
-sub covering {
-    my $width = shift;
-    my @suitable = grep { $_->{min} <= $width && $_->{max} >= $width } @cams;
-    return [map { set($_) } @suitable];
-}
-
-# Return a list of minimal elements of @_; ie x is in the returned list
-# iff there is no y in @_ with y < @_.
-# Assumes list is sorted.
-sub strip_supersets {
-    my @seen;
-    SET: foreach my $set (@_) {
-        foreach my $seen (@seen) {
-            next SET if $seen < $set;
-        }
-        push @seen, $set;
-    }
-    return @seen;
-}
-
-# Given a list of coverings for L and a list of coverings for R, return a list
-# of coverings for L+R, sorted by cost (lowest first).
-sub merge {
-    (my $cost_fn, my $left, my $right) = @_;
-    my @answer = ();
-    for my $left_set (@$left) {
-        for my $right_set (@$right) {
-            push @answer, $left_set + $right_set;
-        }
-    }
-    @answer = sort { $cost_fn->($a) <=> $cost_fn->($b) } @answer;
-    # Comment out next line for EPIC SLOWDOWN :-)
-    @answer = strip_supersets(@answer);
-    return @answer;
-}
-
-sub candidates {
-    (my $min, my $max, my $cost_fn) = @_;
-    if ($max - $min <= 1) {
-        return merge($cost_fn, covering($min), covering($max));
-    }
-    else {
-        my $middle = floor(($max + $min)/2);
-        return merge($cost_fn,
-                     [ candidates($min, $middle, $cost_fn) ],
-                     [ candidates($middle, $max, $cost_fn) ]);
-    }
-}
-
-sub say_covering {
-    my $covering = shift;
-    my $cost_fn = shift;
-    print join(", ", map { $_->{'name'} } $covering->members());
-    print ": " . $cost_fn->($covering) if defined($cost_fn);
-    say "";
-}
 
 die "Usage: cams.pl MIN MAX\n"
     if @ARGV != 2 || $ARGV[0] > $ARGV[1]
     || grep { !looks_like_number($_) } @ARGV;
 
-my @solutions = candidates($ARGV[0], $ARGV[1], \&weight_of_set);
-if (!@solutions) {
+my $data = test_data();
+my $solver = Cams::Solver->new($data, $ARGV[0], $ARGV[1], 'weight');
+
+if (!$solver->solutions) {
     say 'No solutions are possible';
 }
 else {
-    for my $covering (@solutions) {
-        say_covering($covering, \&weight_of_set);
-    }
+    say $solver->solutions_as_string;
 }
 
 1;
