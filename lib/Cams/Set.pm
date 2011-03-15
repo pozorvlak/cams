@@ -1,9 +1,7 @@
 package Cams::Set;
+use Moose;
 
-use strict;
-use warnings;
-
-use base qw/Set::Object/;
+extends 'Set::Object';
 
 use namespace::autoclean;
 use Scalar::Util qw/blessed/;

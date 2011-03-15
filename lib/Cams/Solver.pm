@@ -1,26 +1,26 @@
 package Cams::Solver;
+use Moose;
 
-use strict;
-use warnings;
-
-use Object::Tiny qw/cams min max cost_method solutions_array/;
+has cams        => (is => 'ro', required => 1, isa => 'Cams::Set');
+has min         => (is => 'ro', required => 1, isa => 'Num');
+has max         => (is => 'ro', required => 1, isa => 'Num');
+has cost_method => (is => 'ro', required => 1, isa => 'Str|CodeRef');
+has _solutions  => (is => 'ro', init_arg => undef, lazy => 1, builder => 'solve');
 
 use namespace::autoclean;
 use Carp qw/croak/;
 use POSIX qw/floor/;
 
-sub new {
+sub BUILDARGS {
     my ($class, $cams, $min, $max, $cost_method) = @_;
     croak "Impossible to solve because min=$min > max=$max"
         if $min > $max;
-    my $self = bless {
+    return {
         cams        => $cams,
         min         => $min,
         max         => $max,
         cost_method => $cost_method,
-    }, $class;
-    $self->solve;
-    return $self;
+    };
 }
 
 sub solutions_as_string {
@@ -31,17 +31,17 @@ sub solutions_as_string {
 
 sub solve {
     my ($self) = @_;
-    $self->{solutions_array} = [ $self->candidates($self->min, $self->max) ];
+    return [ $self->candidates($self->min, $self->max) ];
 }
 
 sub best_solution {
     my ($self) = @_;
-    return $self->solutions_array->[0];
+    return $self->_solutions->[0];
 }
 
 sub solutions {
     my ($self) = @_;
-    return @{ $self->solutions_array };
+    return @{ $self->_solutions };
 }
 
 # Return a list of minimal elements of @_; ie x is in the returned list
