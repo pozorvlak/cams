@@ -9,13 +9,8 @@ use namespace::autoclean;
 use Scalar::Util qw/blessed/;
 use List::Util qw/sum/;
 
-sub new {
-    my $class = shift;
-    # Perhaps validate that all the arguments are the right shape.
-    my $self = $class->SUPER::new;
-    $self->insert(@_);
-    return $self;
-}
+# XXX: Perhaps extend the inherited ->new method to validate that all
+# members are the right shape (name, min, max, weight, cost)
 
 sub set {
     my $class = __PACKAGE__;
