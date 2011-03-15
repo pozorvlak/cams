@@ -19,6 +19,17 @@ my %NAME = (
     bc => 'BC Camalot',
 );
 
+ok(exception { Cams::Solver->new },
+   'Cams::Solver constructor args are required');
+ok(exception { Cams::Solver->new($data, 10, 20) },
+   'Cams::Solver all constructor args are required');
+ok(exception { Cams::Solver->new($data, 'a', 'b', 'weight') },
+   'Cams::Solver min/max constructor args must be numeric');
+ok(exception { Cams::Solver->new({}, 10, 20, 'weight') },
+   'Cams::Solver cams constructor arg must be a Cams::Set');
+ok(exception { Cams::Solver->new($data, 10, 20, []) },
+   'Cams::Solver cost_method constructor arg must be a method');
+
 like(exception { Cams::Solver->new($data, 20, 10, 'weight') },
      qr/Impossible to solve/, "Can't solve where min > max");
 

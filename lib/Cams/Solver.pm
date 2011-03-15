@@ -13,6 +13,7 @@ use POSIX qw/floor/;
 
 sub BUILDARGS {
     my ($class, $cams, $min, $max, $cost_method) = @_;
+    no warnings qw<uninitialized numeric>;
     croak "Impossible to solve because min=$min > max=$max"
         if $min > $max;
     return {
