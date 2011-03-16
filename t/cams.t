@@ -23,14 +23,14 @@ ok(exception { Cams::Solver->new },
    'Cams::Solver constructor args are required');
 ok(exception { Cams::Solver->new($data, 10, 20) },
    'Cams::Solver all constructor args are required');
-ok(exception { Cams::Solver->new($data, 'a', 'b', 'weight') },
+ok(exception { Cams::Solver->new($data, 'a', 'b', 'mass') },
    'Cams::Solver min/max constructor args must be numeric');
-ok(exception { Cams::Solver->new({}, 10, 20, 'weight') },
+ok(exception { Cams::Solver->new({}, 10, 20, 'mass') },
    'Cams::Solver cams constructor arg must be a Cams::Set');
 ok(exception { Cams::Solver->new($data, 10, 20, []) },
    'Cams::Solver cost_method constructor arg must be a method');
 
-like(exception { Cams::Solver->new($data, 20, 10, 'weight') },
+like(exception { Cams::Solver->new($data, 20, 10, 'mass') },
      qr/Impossible to solve/, "Can't solve where min > max");
 
 cams_ok(1000, 2000);
@@ -54,9 +54,9 @@ sub cams_ok {
     }
 
     my @got;
-    my $solver = Cams::Solver->new($data, $min, $max, 'weight');
+    my $solver = Cams::Solver->new($data, $min, $max, 'mass');
     for my $solution ($solver->solutions) {
-        push @got, [$solution->weight, sort map { $_->{name} } @$solution];
+        push @got, [$solution->mass, sort map { $_->{name} } @$solution];
     }
 
     is_deeply(\@got, \@expected, "Correct results for min=$min max=$max");

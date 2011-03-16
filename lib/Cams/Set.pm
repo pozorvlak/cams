@@ -8,7 +8,7 @@ use Scalar::Util qw/blessed/;
 use List::Util qw/sum/;
 
 # XXX: Perhaps extend the inherited ->new method to validate that all
-# members are the right shape (name, min, max, weight, cost)
+# members are the right shape (name, min, max, mass, cost)
 
 sub set {
     my $class = __PACKAGE__;
@@ -25,9 +25,9 @@ sub covering {
             $self->members()];
 }
 
-sub weight {
+sub mass {
     my ($self) = @_;
-    return sum(map { $_->{'weight'} } $self->members());
+    return sum(map { $_->{'mass'} } $self->members());
 }
 
 sub as_string {

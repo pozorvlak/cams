@@ -15,7 +15,7 @@ die "Usage: cams.pl MIN MAX\n"
     || grep { !looks_like_number($_) } @ARGV;
 
 my $data = test_data();
-my $solver = Cams::Solver->new($data, $ARGV[0], $ARGV[1], 'weight');
+my $solver = Cams::Solver->new($data, $ARGV[0], $ARGV[1], 'mass');
 
 if (!$solver->solutions) {
     say 'No solutions are possible';
