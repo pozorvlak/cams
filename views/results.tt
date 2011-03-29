@@ -1,0 +1,8 @@
+<div id="page">
+<h1>Possible sets for <% min %>&ndash;<% max %></h1>
+<ul>
+<% FOREACH camset IN camsets %>
+	<li><% camset.as_string() %> <b><% camset.mass %></b></li>
+<% END %>
+</ul>
+</div>
