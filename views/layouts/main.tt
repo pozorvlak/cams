@@ -14,7 +14,9 @@
 
 </head>
 <body>
+<div id="page">
 <% content %>
+</div>
 <div id="footer">
 Powered by <a href="http://perldancer.org/">Dancer</a> <% dancer_version %>
 </div>

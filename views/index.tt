@@ -1,12 +1,16 @@
 <div id="content">
   <div id="header">
     <h1>Optimise Your Rack</h1>
+    <h2>Using the awesome power of MATHEMATICS!</h2>
+  </div>
+  <div id="input">
     <form method="GET" action="/solve">
-      What sizes of cracks will you need to protect?
-      <input name="min" id="min" />
+      What sizes of cracks will you need to protect?<br />
+      <input name="min" id="min" size="5" />
       <label for="min">Minimum width (mm)</label><br />
-      <input name="max" id="max" />
+      <input name="max" id="max" size="5" />
       <label for="max">Maximum width (mm)</label><br />
       <input type="submit" value="Submit" />
+    </form>
   </div>
 </div>
