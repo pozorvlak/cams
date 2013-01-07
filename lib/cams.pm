@@ -5,7 +5,7 @@ use Cams;
 
 our $VERSION = '0.1';
 
-get '/:min/:max' => sub {
+get '/solve' => sub {
     (my $min, my $max) = (params->{min}, params->{max});
     my $data = test_data();
     my $solver = Cams::Solver->new($data, $min, $max, 'mass');
