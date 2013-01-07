@@ -18,7 +18,8 @@
 <% content %>
 </div>
 <div id="footer">
-Powered by <a href="http://perldancer.org/">Dancer</a> <% dancer_version %>
+Powered by <a href="http://perldancer.org/">Dancer</a> <% dancer_version %><br/>
+Fork us on <a href="http://github.com/pozorvlak/cams">GitHub</a>!
 </div>
 </body>
 </html>
