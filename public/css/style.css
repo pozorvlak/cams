@@ -127,6 +127,15 @@ margin-bottom: 25px;
 font-size: 18px;
 }
 
+#results th {
+text-align: left;
+}
+
+#results td, th {
+font-size: 16px;
+padding-right: 2em;
+}
+
 #footer {
 clear: both;
 padding-top: 2em;

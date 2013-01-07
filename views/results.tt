@@ -1,8 +1,12 @@
-<div id="page">
-<h1>Possible sets for <% min %>&ndash;<% max %></h1>
-<ul>
-<% FOREACH camset IN camsets %>
-	<li><% camset.as_string() %> <b><% camset.mass %></b></li>
-<% END %>
-</ul>
+<div id="content">
+  <h1>Possible sets of cams to protect <% min %>mm&ndash;<% max %>mm cracks</h1>
+  <table id="results">
+    <tr><th>Cams</th><th>Mass (g)</th></tr>
+    <% FOREACH camset IN camsets %>
+      <tr>
+        <td><% camset.as_string() %></td>
+        <td><% camset.mass %></td>
+      </tr>
+    <% END %>
+  </table>
 </div>
