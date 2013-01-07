@@ -18,6 +18,8 @@ WriteMakefile(
         'Set::Object'=> 0,
         'Path::Class'=> 0,
         'Template'   => 0,
+        'Moose'      => 0,
+        'namespace::autoclean' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'cams-*' },
