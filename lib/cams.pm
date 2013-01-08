@@ -2,11 +2,12 @@ package cams;
 use Dancer ':syntax';
 use Cams::Data 'test_data';
 use Cams;
+use POSIX qw/floor ceil/;
 
 our $VERSION = '0.1';
 
 get '/solve' => sub {
-    (my $min, my $max) = (params->{min}, params->{max});
+    (my $min, my $max) = (floor(params->{min}), ceil(params->{max}));
     my $data = test_data();
     my $solver = Cams::Solver->new($data, $min, $max, 'mass');
     template 'results.tt', {
