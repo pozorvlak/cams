@@ -1,0 +1,8 @@
+<div id="content">
+  <div id="header">
+    <h1>Something went wrong</h1>
+    <h2>:-(</h2>
+  </div>
+  <p>We couldn't calculate a set of cams to cover the range "<% min %>" to
+"<% max %>". Sorry! Please <a href="/">try another range</a>.</p>
+</div>

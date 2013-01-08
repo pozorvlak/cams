@@ -3,18 +3,26 @@ use Dancer ':syntax';
 use Cams::Data 'test_data';
 use Cams;
 use POSIX qw/floor ceil/;
+use Try::Tiny;
 
 our $VERSION = '0.1';
 
 get '/solve' => sub {
     (my $min, my $max) = (floor(params->{min}), ceil(params->{max}));
     my $data = test_data();
-    my $solver = Cams::Solver->new($data, $min, $max, 'mass');
-    template 'results.tt', {
-         min => $min,
-         max => $max,
-         camsets => [ $solver->solutions ]
-    };
+    try {
+        my $solver = Cams::Solver->new($data, $min, $max, 'mass');
+        template 'results.tt', {
+            min => $min,
+            max => $max,
+            camsets => [ $solver->solutions ]
+        };
+    } catch {
+        template 'error.tt', {
+            min => $min,
+            max => $max,
+        };
+    }
 };
 
 get '/' => sub {
