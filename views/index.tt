@@ -1,3 +1,16 @@
+<div id="sidebar">
+  <ul>
+  <li>There are three problems with <a
+href="http://en.wikipedia.org/wiki/Spring-loaded_camming_device">spring-loaded
+camming devices</a>: they're expensive, they're heavy, and each cam can only
+grip cracks whose width is within a given range, so your rack needs to contain
+several cams of different sizes.</li>
+  <li>Finding the lightest set of cams to cover a given range of crack widths
+is an example of an <a
+href="http://en.wikipedia.org/wiki/Integer_programming">integer programming
+problem</a>, and that's the problem that this site solves.</li>
+</ul>
+</div>
 <div id="content">
   <div id="header">
     <h1>Optimise Your Rack</h1>
