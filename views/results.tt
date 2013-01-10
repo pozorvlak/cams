@@ -12,4 +12,6 @@
       </tr>
     <% END %>
   </table>
+  <h2>Again! Again!</h2>
+  <% INCLUDE form.tt %>
 </div>
