@@ -12,4 +12,7 @@
       </tr>
     <% END %>
   </table>
+  <div id="back-to-start">
+    <a href="/">Try another range</a>
+  </div>
 </div>

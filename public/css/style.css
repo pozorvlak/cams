@@ -158,3 +158,7 @@ list-style-type: none;
 #sidebar ul.links li {
 margin-bottom: 5px;
 }
+
+#back-to-start {
+margin-top: 25px;
+}
