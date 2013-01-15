@@ -4,12 +4,14 @@ use Cams::Data 'test_data';
 use Cams;
 use POSIX qw/floor ceil/;
 use Try::Tiny;
+use List::Util qw/min max/;
 
 our $VERSION = '0.1';
 
 get '/solve' => sub {
-    (my $min, my $max) = (floor(params->{min}), ceil(params->{max}));
     my $data = test_data();
+    my $min = max floor(params->{min}), $data->min_width;
+    my $max = min ceil(params->{max}), $data->max_width;
     try {
         my $solver = Cams::Solver->new($data, $min, $max, 'mass');
         template 'results.tt', {
