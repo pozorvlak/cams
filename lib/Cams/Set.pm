@@ -5,7 +5,7 @@ extends 'Set::Object';
 
 use namespace::autoclean;
 use Scalar::Util qw/blessed/;
-use List::Util qw/sum/;
+use List::Util qw/max min sum/;
 
 # XXX: Perhaps extend the inherited ->new method to validate that all
 # members are the right shape (name, min, max, mass, cost)
@@ -35,6 +35,16 @@ sub as_string {
     my $s = join(", ", map { $_->{'name'} } $self->members());
     $s .= ": " . $self->$cost_method() if defined($cost_method);
     return $s;
+}
+
+sub min_width {
+    my ($self) = @_;
+    return min map { $_->{min} } $self->members;
+}
+
+sub max_width {
+    my ($self) = @_;
+    return max map { $_->{max} } $self->members;
 }
 
 =head1 COPYRIGHT & LICENSE
